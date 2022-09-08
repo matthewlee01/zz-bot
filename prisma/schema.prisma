@@ -1,0 +1,18 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  tag       String
+  guildId   BigInt
+  ign       String?
+  interests String[] @default([])
+  
+  @@id([tag, guildId])
+}

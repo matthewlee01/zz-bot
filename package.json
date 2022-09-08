@@ -1,0 +1,21 @@
+{
+  "name": "zz-bot",
+  "version": "1.0.0",
+  "description": "zz'bot portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node deploy-commands.js && node server.js"
+  },
+  "author": "matthewlee01",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^1.1.0",
+    "@prisma/client": "^4.3.1",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "prisma": "^4.3.1"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "league-of-legends": {
+    "party-size": 5
+  },
+  "aram": {
+    "party-size": 5,
+    "parent": "league-of-legends"
+  },
+  "soloq": {
+    "party-size": 2,
+    "parent": "league-of-legends"
+  },
+  "teamfight-tactics": {
+    "party-size": 8
+  },
+  "teamfight-tactics-ranked": {
+    "party-size": 2,
+    "parent": "teamfight-tactics"
+  }
+}
