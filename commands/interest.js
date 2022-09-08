@@ -41,8 +41,6 @@ module.exports = {
     const tag = interaction.user.tag;
     const userId = interaction.user.id;
     const guildId = interaction.guild.id;
-    console.log(interaction.user.id);
-    console.log(userId);
     const data = await prisma.member.findUnique({
       where: {
         userId_guildId: {

@@ -17,7 +17,7 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-	console.log('| [zz\'bot] ready!');
+	console.log('| [server.js] zz\'bot portal open!');
 });
 
 client.on('interactionCreate', async (interaction) => {
