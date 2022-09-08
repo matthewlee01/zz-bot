@@ -1,7 +1,7 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
-const interests = require("../interests.json");
-const interestList = Object.keys(interests).map((key) => ({
+const interestData = require("../interests.json");
+const interestList = Object.keys(interestData).map((key) => ({
   name: key,
   value: key,
 }));
@@ -39,11 +39,14 @@ module.exports = {
     ),
   async execute(interaction) {
     const tag = interaction.user.tag;
-    const guildId = Number(interaction.guild.id.toString());
-    let { interests } = await prisma.member.findUnique({
+    const userId = interaction.user.id;
+    const guildId = interaction.guild.id;
+    console.log(interaction.user.id);
+    console.log(userId);
+    const data = await prisma.member.findUnique({
       where: {
-        tag_guildId: {
-          tag: tag,
+        userId_guildId: {
+          userId: userId,
           guildId: guildId,
         },
       },
@@ -51,17 +54,19 @@ module.exports = {
         interests: true,
       },
     });
+    let interests = data ? data.interests : [];
 
     const upsertInterests = async (interests) => {
       await prisma.member.upsert({
         where: {
-          tag_guildId: {
-            tag: tag,
+          userId_guildId: {
+            userId: userId,
             guildId: guildId,
           },
         },
         create: {
           tag: tag,
+          userId: userId,
           guildId: guildId,
           interests: interests,
         },
@@ -84,7 +89,9 @@ module.exports = {
       const interestToRemove = interaction.options.getString("interest");
       interests = interests.filter((interest) => interest != interestToRemove);
       await upsertInterests(interests);
-      console.log(`| [interest.js] ${tag} removed interest ${interestToRemove}`);
+      console.log(
+        `| [interest.js] ${tag} removed interest ${interestToRemove}`
+      );
     }
 
     let replyString = "your current interests are:";
@@ -92,7 +99,6 @@ module.exports = {
       replyString = "you currently have no interests.";
     } else {
       interests.forEach((interest) => {
-        console.log(interest);
         replyString = replyString.concat(`\n${interest}`);
       });
     }

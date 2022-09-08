@@ -9,10 +9,11 @@ datasource db {
 }
 
 model Member {
-  tag       String
-  guildId   BigInt
+  tag       String?
+  userId    String
+  guildId   String
   ign       String?
   interests String[] @default([])
   
-  @@id([tag, guildId])
+  @@id([userId, guildId])
 }

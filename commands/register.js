@@ -11,16 +11,18 @@ module.exports = {
       .setRequired(true)),
   async execute(interaction) {
     const tag = interaction.user.tag;
-    const guildId = Number(interaction.guild.id.toString());
+    const userId = interaction.user.id;
+    const guildId = interaction.guild.id;
     const ign = interaction.options.getString('ign');
     const member = await prisma.member.upsert({
       where: {
-        tag_guildId: {
-          tag: tag,
+        userId_guildId: {
+          userId: userId,
           guildId: guildId,
         },
       },
       create: {
+        userId: userId,
         tag: tag,
         guildId: guildId,
         ign: ign,
