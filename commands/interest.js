@@ -1,9 +1,11 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
 const interestData = require("../interests.json");
-const interestList = Object.keys(interestData).map((key) => ({
-  name: key,
-  value: key,
+const { traverseInterestData } = require("../lib/interest-helpers.js");
+
+let interestList = traverseInterestData(interestData.data).map((interest) => ({
+  name: interest,
+  value: interest,
 }));
 
 module.exports = {
@@ -37,6 +39,8 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand.setName("list").setDescription("view your current interests")
     ),
+
+  traverseInterestData: traverseInterestData,
   async execute(interaction) {
     const tag = interaction.user.tag;
     const userId = interaction.user.id;
