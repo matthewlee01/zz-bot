@@ -17,18 +17,9 @@ const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs
 	.readdirSync(commandsPath)
 	.filter((file) => file.endsWith('.js'));
+
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	client.commands.set(command.data.name, command);
-}
-
-const betaCommandsPath = path.join(__dirname, 'beta-commands');
-const betaCommandFiles = fs
-	.readdirSync(betaCommandsPath)
-	.filter((file) => file.endsWith('.js'));
-for (const file of betaCommandFiles) {
-	const filePath = path.join(betaCommandsPath, file);
 	const command = require(filePath);
 	client.commands.set(command.data.name, command);
 }

@@ -4,8 +4,7 @@
   "description": "zz'bot portal",
   "main": "server.js",
   "scripts": {
-    "start": "node deploy-commands.js && node server.js",
-    "dev": "node deploy-commands.js && node deploy-beta-commands.js && node server.js"
+    "start": "node deploy-commands.js && node server.js"
   },
   "author": "matthewlee01",
   "license": "ISC",
