@@ -20,5 +20,5 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '10' }).setToken(token);
 
 rest.put(Routes.applicationCommands(clientId), { body: commands })
-	.then((data) => console.log(`| [deploy-commands.js] successfully registered ${data.length} application commands.`))
+	.then((data) => console.log(`| [deploy-commands.js] successfully registered ${data.length} application commands`))
 	.catch(console.error);

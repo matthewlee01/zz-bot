@@ -1,14 +1,22 @@
-require('dotenv').config()
+require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const token = process.env.TOKEN;
 
 const fs = require('node:fs');
 const path = require('node:path');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildMessages,
+	],
+});
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandFiles = fs
+	.readdirSync(commandsPath)
+	.filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
@@ -31,7 +39,10 @@ client.on('interactionCreate', async (interaction) => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: `error while executing this command: ${error}`, ephemeral: true });
+		await interaction.reply({
+			content: `error while executing this command: ${error}`,
+			ephemeral: true,
+		});
 	}
 });
 

@@ -11,7 +11,7 @@ let interestList = traverseInterestData(interestData.data).map((interest) => ({
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("interest")
-    .setDescription("set which games you're interested in playing")
+    .setDescription("set which games you're interested in being notified about")
     .addSubcommand((subcommand) =>
       subcommand
         .setName("add")
@@ -104,6 +104,6 @@ module.exports = {
         replyString = replyString.concat(`\n${interest}`);
       });
     }
-    await interaction.reply(replyString);
+    await interaction.reply({ content: replyString, ephemeral: true });
   },
 };

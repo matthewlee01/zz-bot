@@ -14,6 +14,16 @@ interestList.push({
   value: "custom",
 });
 
+const parseReactors = (reactionCollection) => {
+  let userIds = new Set();
+  reactionCollection.forEach(reaction => {
+    reaction.users.cache.forEach(user => {
+      userIds.add(user.id);
+    })
+  })
+  return Array.from(userIds);
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("party")
@@ -66,16 +76,47 @@ module.exports = {
           userId: true,
         },
       });
-      let replyString = `<@${userId}> has started a party!\nparty size: ${partySize}`;
+      let replyString = `<@${userId}> has started a party!\n| party size: ${partySize}`;
       if (gameType)
-        replyString = replyString.concat(`\nparty type: ${gameType}`);
+        replyString = replyString.concat(`\n| party type: ${gameType}`);
       interestedMembers.forEach((member) => {
-        replyString = replyString.concat(`\n<@${member.userId}>`);
+        replyString = replyString.concat(`\n| <@${member.userId}>`);
       });
-      await interaction.reply(replyString);
+      let message = await interaction.reply({
+        content: replyString,
+        fetchReply: true,
+      });
       console.log(
         `| [party.js] ${interaction.user.tag} has created a ${gameType} party of size ${partySize}`
       );
+
+      await message.react("👍");
+      const filter = (_, user) => {
+        return (
+          message.reactions.cache.filter((reaction) => {
+            return reaction.users.cache.find((previousUser) => user.id == previousUser.id)}
+          ).size <=1 && user.id != userId
+        );
+      };
+
+      message
+        .awaitReactions({ filter, max: partySize, time: 20000, errors: ["time"] })
+        .then((_) => {
+          let followUpString = `<@${userId}>, your party is ready!`
+          parseReactors(message.reactions.cache).forEach((reactorId) => {
+            if (reactorId != interaction.client.user.id) {
+              followUpString = followUpString.concat(`\n| <@${reactorId}>`)
+            }
+          })
+          interaction.followUp(followUpString);
+          console.log(`| [party.js] ${interaction.user.tag}'s party successfully created`)
+        })
+        .catch((_) => {
+          interaction.followUp(`<@${userId}>\'s party timed out.`);
+          console.log(
+            `| [party.js] ${interaction.user.tag}'s party timed out`
+          );
+        });
     }
   },
 };
