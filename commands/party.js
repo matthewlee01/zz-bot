@@ -87,7 +87,7 @@ module.exports = {
             hasSome: [
               gameType,
               ...traverseGameData(game?.children),
-              game.parent || "",
+              game?.parent || "",
             ],
           },
           guildId: guildId,
