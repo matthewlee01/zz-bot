@@ -47,6 +47,8 @@ module.exports = {
     const game = searchGameData(gameData.data, { name: gameType });
     const partySize =
       interaction.options.getInteger("party-size") || game?.["party-size"];
+
+    // handle bad args
     if (partySize <= 1) {
       await interaction.reply({
         content: "error: party size must be larger than 1",
@@ -76,19 +78,40 @@ module.exports = {
           userId: true,
         },
       });
-      let replyString = `<@${userId}> has started a party!\n| party size: ${partySize}`;
-      if (gameType)
-        replyString = replyString.concat(`\n| party type: ${gameType}`);
-      interestedMembers.forEach((member) => {
-        replyString = replyString.concat(`\n| <@${member.userId}>`);
-      });
+
+      // generate response
+      let embed = {
+        title: `${interaction.member.displayName} is looking for a party!`,
+        author: { name: "zz'bot", iconURL: process.env.ICON_URL },
+        description:
+          "react to this message to join the party and be notified once everyone is ready.",
+        fields: [
+          {
+            name: 'game type',
+            value: gameType,
+            inline: true,
+          },
+          {
+            name: 'party size',
+            value: partySize,
+            inline: true,
+          },
+          {
+            name: 'interested members',
+            value: interestedMembers.reduce((str, member) => str.concat(`<@${member.userId}> `), ""),
+            inline: false,
+          }
+        ],
+      };
       let message = await interaction.reply({
-        content: replyString,
+        embeds: [embed],
         fetchReply: true,
       });
       console.log(
         `| [party.js] ${interaction.user.tag} has created a ${gameType} party of size ${partySize}`
       );
+
+      // await reactions
       const filter = (_, user) => {
         return (
           message.reactions.cache.filter((reaction) => {
@@ -98,7 +121,6 @@ module.exports = {
           }).size <= 1 && user.id != userId
         );
       };
-
       message
         .awaitReactions({
           filter,
@@ -107,6 +129,7 @@ module.exports = {
           errors: ["time"],
         })
         .then((_) => {
+          // notify party
           let followUpString = `<@${userId}>, your party is ready!`;
           parseReactors(message.reactions.cache).forEach((reactorId) => {
             if (
