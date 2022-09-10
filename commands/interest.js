@@ -107,7 +107,7 @@ module.exports = {
         descriptionString = descriptionString.concat(`\n⦁ ${interest}`);
       });
       descriptionString = descriptionString.concat(
-        "\nyou'll be notified when someone creates a party for any of your interested games."
+        "\n\nyou'll be notified when someone creates a party for any of your interested games."
       );
     }
     embed.description = descriptionString;
