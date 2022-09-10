@@ -1,5 +1,6 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
+const { embedTemplate } = require("../lib/embed-helper");
 const gameData = require("../game-data.json");
 const {
   traverseGameData,
@@ -51,12 +52,26 @@ module.exports = {
     // handle bad args
     if (partySize <= 1) {
       await interaction.reply({
-        content: "error: party size must be larger than 1",
+        embeds: [
+          {
+            ...embedTemplate,
+            title: "error: party size must be larger than 1",
+            description:
+              "try using the default party size, or specifiying a number larger than 1.",
+          },
+        ],
         ephemeral: true,
       });
     } else if (gameType == "custom" && !partySize) {
       await interaction.reply({
-        content: "error: must specify game-type or custom party size",
+        embeds: [
+          {
+            ...embedTemplate,
+            title: "error: must specify game-type or custom party size",
+            description:
+              "custom parties do not have a default size, so a party-size must be specified.",
+          },
+        ],
         ephemeral: true,
       });
     } else {
@@ -80,30 +95,39 @@ module.exports = {
       });
 
       // generate response
+      const interestedMemberString = interestedMembers.reduce(
+        (str, member) => str.concat(`<@${member.userId}> `),
+        ""
+      );
       let embed = {
-        title: `${interaction.member.displayName} is looking for a party!`,
+        ...embedTemplate,
         author: { name: "zz'bot", iconURL: process.env.ICON_URL },
+        title: `${interaction.member.displayName} is creating a party`,
         description:
           "react to this message to join the party and be notified once everyone is ready.",
         fields: [
           {
-            name: 'game type',
+            name: "game type",
             value: gameType,
             inline: true,
           },
           {
-            name: 'party size',
+            name: "party size",
             value: partySize,
             inline: true,
           },
           {
-            name: 'interested members',
-            value: interestedMembers.reduce((str, member) => str.concat(`<@${member.userId}> `), ""),
+            name: "interested members",
+            value:
+              interestedMemberString === ""
+                ? "none :("
+                : interestedMemberString,
             inline: false,
-          }
+          },
         ],
       };
       let message = await interaction.reply({
+        content: interestedMemberString,
         embeds: [embed],
         fetchReply: true,
       });
@@ -130,22 +154,50 @@ module.exports = {
         })
         .then((_) => {
           // notify party
-          let followUpString = `<@${userId}>, your party is ready!`;
+          let followUpString = `<@${userId}> `;
           parseReactors(message.reactions.cache).forEach((reactorId) => {
             if (
               reactorId != interaction.client.user.id &&
               reactorId != userId
             ) {
-              followUpString = followUpString.concat(`\n| <@${reactorId}>`);
+              followUpString = followUpString.concat(`<@${reactorId}> `);
             }
           });
-          interaction.followUp(followUpString);
+          interaction.followUp({
+            content: followUpString,
+            embeds: [
+              {
+                ...embedTemplate,
+                title: `${interaction.member.displayName}'s party is complete`,
+                description: "everyone is here!",
+                fields: [
+                  {
+                    name: "party members",
+                    value: followUpString,
+                    inline: false,
+                  },
+                ],
+              },
+            ],
+          });
           console.log(
             `| [party.js] ${interaction.user.tag}'s party successfully created`
           );
         })
         .catch((_) => {
-          interaction.followUp(`<@${userId}>\'s party timed out.`);
+          interaction.followUp({
+            content: `<@${userId}>`,
+            embeds: [
+              {
+                ...embedTemplate,
+                title: "party creation timed out",
+                description: "we'll get em next time...",
+                thumbnail: {
+                  url: "https://i.kym-cdn.com/photos/images/facebook/001/857/750/4ab.png",
+                },
+              },
+            ],
+          });
           console.log(`| [party.js] ${interaction.user.tag}'s party timed out`);
         });
       await message.react("👍");

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { embedTemplate } = require("./lib/embed-helper.js");
 const token = process.env.TOKEN;
 
 const fs = require('node:fs');
@@ -40,7 +41,11 @@ client.on('interactionCreate', async (interaction) => {
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({
-			content: `error while executing this command: ${error}`,
+			embeds: [{
+				...embedTemplate,
+				title: "error while executing command",
+				description: `error: ${error}`
+			}],
 			ephemeral: true,
 		});
 	}

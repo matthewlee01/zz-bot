@@ -1,5 +1,6 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
+const { embedTemplate } = require("../lib/embed-helper.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -32,6 +33,10 @@ module.exports = {
       },
     });
     console.log(`| [register.js] member ${member.tag} registered in guild ${member.guildId} with IGN: '${member.ign}'`);
-    await interaction.reply(`${member.tag} registered with IGN '${member.ign}'!`);
+    await interaction.reply({embeds: [{
+      ...embedTemplate,
+      title: `${member.tag} registered with IGN '${member.ign}'!`,
+      description: "this IGN will now automatically be used when retrieving game data."
+    }]});
   },
 };

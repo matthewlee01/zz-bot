@@ -2,6 +2,7 @@ const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
 const gameData = require("../game-data.json");
 const { traverseGameData } = require("../lib/game-data-helpers.js");
+const { embedTemplate } = require("../lib/embed-helper.js");
 
 let gameList = traverseGameData(gameData.data).map((name) => ({
   name: name,
@@ -78,12 +79,14 @@ module.exports = {
       });
     };
 
+    let embed = embedTemplate;
     if (interaction.options.getSubcommand() == "add") {
       const interestToAdd = interaction.options.getString("interest");
       if (interests.indexOf(interestToAdd) == -1) {
         interests.push(interestToAdd);
       }
       await upsertInterests(interests);
+      embed.title = `interest ${interestToAdd} added successfully`
       console.log(`| [interest.js] ${tag} added interest ${interestToAdd}`);
     }
 
@@ -91,19 +94,21 @@ module.exports = {
       const interestToRemove = interaction.options.getString("interest");
       interests = interests.filter((interest) => interest != interestToRemove);
       await upsertInterests(interests);
+      embed.title = `interest ${interestToRemove} removed successfully`
       console.log(
         `| [interest.js] ${tag} removed interest ${interestToRemove}`
       );
     }
 
-    let replyString = "your current interests are:";
+    let descriptionString = "your current interests are:";
     if (interests.length == 0) {
-      replyString = "you currently have no interests.";
+      descriptionString = "you currently have no interests.";
     } else {
       interests.forEach((interest) => {
-        replyString = replyString.concat(`\n${interest}`);
+        descriptionString = descriptionString.concat(`\n${interest}`);
       });
     }
-    await interaction.reply({ content: replyString, ephemeral: true });
+    embed.description = descriptionString;
+    await interaction.reply({ embeds: [embed], ephemeral: true });
   },
 };
