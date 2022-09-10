@@ -86,7 +86,7 @@ module.exports = {
           interests: {
             hasSome: [
               gameType,
-              ...traverseGameData(game.children),
+              ...traverseGameData(game?.children),
               game.parent || "",
             ],
           },
