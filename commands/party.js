@@ -40,6 +40,11 @@ module.exports = {
       option
         .setName("party-size")
         .setDescription("optional override for party size")
+    )
+    .addIntegerOption((option) => 
+      option
+        .setName("timeout")
+        .setDescription("time (in minutes) before the party attempt expires - defaults to 60")
     ),
   async execute(interaction) {
     const userId = interaction.user.id;
@@ -48,6 +53,7 @@ module.exports = {
     const game = searchGameData(gameData.data, { name: gameType });
     const partySize =
       interaction.options.getInteger("party-size") || game?.["party-size"];
+    const timeout = interaction.options.getInteger("timeout") * 60000 || 3600000;
 
     // handle bad args
     if (partySize <= 1) {
@@ -149,7 +155,7 @@ module.exports = {
         .awaitReactions({
           filter,
           max: partySize,
-          time: 20000,
+          time: timeout,
           errors: ["time"],
         })
         .then((_) => {

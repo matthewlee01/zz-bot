@@ -86,7 +86,7 @@ module.exports = {
         interests.push(interestToAdd);
       }
       await upsertInterests(interests);
-      embed.title = `interest ${interestToAdd} added successfully`
+      embed.title = `interest ${interestToAdd} added successfully`;
       console.log(`| [interest.js] ${tag} added interest ${interestToAdd}`);
     }
 
@@ -94,7 +94,7 @@ module.exports = {
       const interestToRemove = interaction.options.getString("interest");
       interests = interests.filter((interest) => interest != interestToRemove);
       await upsertInterests(interests);
-      embed.title = `interest ${interestToRemove} removed successfully`
+      embed.title = `interest ${interestToRemove} removed successfully`;
       console.log(
         `| [interest.js] ${tag} removed interest ${interestToRemove}`
       );
@@ -107,6 +107,9 @@ module.exports = {
       interests.forEach((interest) => {
         descriptionString = descriptionString.concat(`\n⦁ ${interest}`);
       });
+      descriptionString = descriptionString.concat(
+        "\nyou'll be notified when someone creates a party for any of your interested games."
+      );
     }
     embed.description = descriptionString;
     await interaction.reply({ embeds: [embed], ephemeral: true });
