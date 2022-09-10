@@ -1,40 +1,44 @@
 {
   "data": [
     {
-      "game": "league-of-legends",
+      "name": "league-of-legends",
       "party-size": 5,
       "children": [
         {
-          "game": "aram",
+          "name": "aram",
           "parent": "league-of-legends",
           "party-size": 5
         },
         {
-          "game": "soloq",
+          "name": "soloq",
           "parent": "league-of-legends",
           "party-size": 2
         }
       ]
     },
     {
-      "game": "teamfight-tactics",
+      "name": "teamfight-tactics",
       "party-size": 8,
       "children": [
         {
-          "game": "ranked-teamfight-tactics",
+          "name": "ranked-teamfight-tactics",
           "parent": "teamfight-tactics",
           "party-size": 3
         },
         {
-          "game": "double-up",
+          "name": "double-up",
           "parent": "teamfight-tactics",
           "party-size": 2
         }
       ]
     },
     {
-      "game": "valorant",
+      "name": "valorant",
       "party-size": 5
+    },
+    {
+      "name": "legends-of-runeterra",
+      "party-size": 2
     }
   ]
 }

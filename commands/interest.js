@@ -1,11 +1,11 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
-const interestData = require("../interests.json");
-const { traverseInterestData } = require("../lib/interest-helpers.js");
+const gameData = require("../game-data.json");
+const { traverseGameData } = require("../lib/game-data-helpers.js");
 
-let interestList = traverseInterestData(interestData.data).map((interest) => ({
-  name: interest,
-  value: interest,
+let gameList = traverseGameData(gameData.data).map((name) => ({
+  name: name,
+  value: name,
 }));
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
             .setName("interest")
             .setDescription("the interest to be added")
             .setRequired(true)
-            .addChoices(...interestList)
+            .addChoices(...gameList)
         )
     )
     .addSubcommand((subcommand) =>
@@ -33,14 +33,14 @@ module.exports = {
             .setName("interest")
             .setDescription("the interest to be removed")
             .setRequired(true)
-            .addChoices(...interestList)
+            .addChoices(...gameList)
         )
     )
     .addSubcommand((subcommand) =>
       subcommand.setName("list").setDescription("view your current interests")
     ),
 
-  traverseInterestData: traverseInterestData,
+  traverseGameData: traverseGameData,
   async execute(interaction) {
     const tag = interaction.user.tag;
     const userId = interaction.user.id;
