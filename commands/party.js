@@ -50,7 +50,7 @@ module.exports = {
     const userId = interaction.user.id;
     const guildId = interaction.guild.id;
     const gameType = interaction.options.getString("game-type");
-    const game = searchGameData(gameData.data, { name: gameType });
+    const [ game ] = searchGameData(gameData.data, { name: gameType });
     const partySize =
       interaction.options.getInteger("party-size") || game?.["party-size"];
     const timeout = interaction.options.getInteger("timeout") * 60000 || 3600000;

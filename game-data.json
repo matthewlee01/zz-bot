@@ -3,6 +3,8 @@
     {
       "name": "league-of-legends",
       "party-size": 5,
+      "match-data": true,
+      "live-data": true,
       "children": [
         {
           "name": "aram",
@@ -19,6 +21,7 @@
     {
       "name": "teamfight-tactics",
       "party-size": 8,
+      "match-data": true,
       "children": [
         {
           "name": "ranked-teamfight-tactics",
@@ -34,11 +37,13 @@
     },
     {
       "name": "valorant",
-      "party-size": 5
+      "party-size": 5,
+      "match-data": true
     },
     {
       "name": "legends-of-runeterra",
-      "party-size": 2
+      "party-size": 2,
+      "match-data": true
     }
   ]
 }

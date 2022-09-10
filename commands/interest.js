@@ -41,7 +41,6 @@ module.exports = {
       subcommand.setName("list").setDescription("view your current interests")
     ),
 
-  traverseGameData: traverseGameData,
   async execute(interaction) {
     const tag = interaction.user.tag;
     const userId = interaction.user.id;
