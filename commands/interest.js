@@ -105,7 +105,7 @@ module.exports = {
       descriptionString = "you currently have no interests.";
     } else {
       interests.forEach((interest) => {
-        descriptionString = descriptionString.concat(`\n${interest}`);
+        descriptionString = descriptionString.concat(`\n⦁ ${interest}`);
       });
     }
     embed.description = descriptionString;
