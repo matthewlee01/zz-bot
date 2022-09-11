@@ -1,10 +1,10 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
-const gameData = require("../game-data.json");
+const gameData = require("../assets/game-data.json");
 const { traverseGameData } = require("../lib/game-data-helpers.js");
 const { embedTemplate } = require("../lib/embed-helper.js");
 
-let gameList = traverseGameData(gameData.data).map((name) => ({
+let gameList = traverseGameData(gameData).map((name) => ({
   name: name,
   value: name,
 }));

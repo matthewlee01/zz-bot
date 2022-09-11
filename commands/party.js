@@ -1,12 +1,12 @@
 const { prisma } = require("../lib/prisma.js");
 const { SlashCommandBuilder } = require("discord.js");
 const { embedTemplate } = require("../lib/embed-helper");
-const gameData = require("../game-data.json");
+const gameData = require("../assets/game-data.json");
 const {
   traverseGameData,
   searchGameData,
 } = require("../lib/game-data-helpers.js");
-let gameList = traverseGameData(gameData.data).map((name) => ({
+let gameList = traverseGameData(gameData).map((name) => ({
   name: name,
   value: name,
 }));
@@ -50,7 +50,7 @@ module.exports = {
     const userId = interaction.user.id;
     const guildId = interaction.guild.id;
     const gameType = interaction.options.getString("game-type");
-    const [ game ] = searchGameData(gameData.data, { name: gameType });
+    const [ game ] = searchGameData(gameData, { name: gameType });
     const partySize =
       interaction.options.getInteger("party-size") || game?.["party-size"];
     const timeout = interaction.options.getInteger("timeout") * 60000 || 3600000;
@@ -107,7 +107,6 @@ module.exports = {
       );
       let embed = {
         ...embedTemplate,
-        author: { name: "zz'bot", iconURL: process.env.ICON_URL },
         title: `${interaction.member.displayName} is creating a party`,
         description:
           "react to this message to join the party and be notified once everyone is ready.",
